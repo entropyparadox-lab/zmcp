@@ -15,14 +15,9 @@ const EchoTool = struct {
     }
 };
 
-fn getMonotonicNs() u64 {
-    var ts: std.posix.timespec = undefined;
-    _ = std.posix.system.clock_gettime(.MONOTONIC, &ts);
-    return @as(u64, @intCast(ts.sec)) * 1_000_000_000 + @as(u64, @intCast(ts.nsec));
-}
-
 pub fn main(init: std.process.Init) !void {
     const allocator = init.arena.allocator();
+    const io = init.io;
 
     var srv = zmcp.Server.init(allocator, .{
         .name = "bench-server",
@@ -46,7 +41,7 @@ pub fn main(init: std.process.Init) !void {
 
     // 2. Measure
     const total_iterations: usize = 200_000;
-    const start_ns = getMonotonicNs();
+    const start_ts = std.Io.Clock.awake.now(io);
 
     var i: usize = 0;
     while (i < total_iterations) : (i += 1) {
@@ -55,8 +50,9 @@ pub fn main(init: std.process.Init) !void {
         }
     }
 
-    const end_ns = getMonotonicNs();
-    const elapsed_ns = end_ns - start_ns;
+    const end_ts = std.Io.Clock.awake.now(io);
+    const duration = start_ts.durationTo(end_ts);
+    const elapsed_ns: u64 = @intCast(@max(1, duration.nanoseconds));
     const elapsed_sec = @as(f64, @floatFromInt(elapsed_ns)) / 1_000_000_000.0;
     const ops_per_sec = @as(f64, @floatFromInt(total_iterations)) / elapsed_sec;
     const latency_ns = @as(f64, @floatFromInt(elapsed_ns)) / @as(f64, @floatFromInt(total_iterations));
