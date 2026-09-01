@@ -2,6 +2,19 @@ const std = @import("std");
 const Allocator = std.mem.Allocator;
 const Server = @import("../server.zig").Server;
 
+fn writeAllFd(fd: i32, bytes: []const u8) !void {
+    var written: usize = 0;
+    while (written < bytes.len) {
+        const n_signed = std.posix.system.write(fd, bytes.ptr + written, bytes.len - written);
+        if (@as(isize, @bitCast(n_signed)) < 0) {
+            return error.WriteFailed;
+        }
+        const n: usize = @intCast(n_signed);
+        if (n == 0) break;
+        written += n;
+    }
+}
+
 /// Runs the MCP Server listening on standard input and writing to standard output (newline-delimited JSON-RPC).
 pub fn run(server: *Server, allocator: Allocator) !void {
     const stdin_fd = std.posix.STDIN_FILENO;
@@ -27,8 +40,8 @@ pub fn run(server: *Server, allocator: Allocator) !void {
                     const arena_alloc = arena.allocator();
 
                     if (try server.handleMessage(arena_alloc, line)) |resp| {
-                        _ = try std.posix.write(stdout_fd, resp);
-                        _ = try std.posix.write(stdout_fd, "\n");
+                        try writeAllFd(stdout_fd, resp);
+                        try writeAllFd(stdout_fd, "\n");
                     }
                 }
                 line_buf.clearRetainingCapacity();
