@@ -107,4 +107,5 @@ test {
     _ = server;
     _ = stdio;
     _ = memory;
+    _ = @import("edge_cases.zig");
 }
