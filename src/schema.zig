@@ -57,25 +57,25 @@ fn writeTypeSchema(writer: anytype, comptime T: type) !void {
                 .{};
 
             var prop_count: usize = 0;
-            inline for (s.fields) |field| {
+            inline for (s.field_names, s.field_types) |field_name, field_type| {
                 if (prop_count > 0) try writer.writeByte(',');
-                try writer.print("\"{s}\":", .{field.name});
+                try writer.print("\"{s}\":", .{field_name});
 
                 // Write property schema
-                try writePropertySchema(writer, field.type, help_map, field.name);
+                try writePropertySchema(writer, field_type, help_map, field_name);
                 prop_count += 1;
             }
 
             try writer.writeAll("},\"required\":[");
 
             var req_count: usize = 0;
-            inline for (s.fields) |field| {
-                const is_optional = @typeInfo(field.type) == .optional;
-                const has_default = field.default_value_ptr != null;
+            inline for (s.field_names, s.field_types, s.field_attrs) |field_name, field_type, field_attrs| {
+                const is_optional = @typeInfo(field_type) == .optional;
+                const has_default = field_attrs.default_value_ptr != null;
 
                 if (!is_optional and !has_default) {
                     if (req_count > 0) try writer.writeByte(',');
-                    try writer.print("\"{s}\"", .{field.name});
+                    try writer.print("\"{s}\"", .{field_name});
                     req_count += 1;
                 }
             }
@@ -128,9 +128,9 @@ fn writePropertySchema(writer: anytype, comptime FieldType: type, comptime help_
         },
         .@"enum" => |e| {
             try writer.writeAll("{\"type\":\"string\",\"enum\":[");
-            inline for (e.fields, 0..) |f, i| {
+            inline for (e.field_names, 0..) |enum_field_name, i| {
                 if (i > 0) try writer.writeByte(',');
-                try writer.print("\"{s}\"", .{f.name});
+                try writer.print("\"{s}\"", .{enum_field_name});
             }
             try writer.writeByte(']');
             if (desc) |d| try writer.print(",\"description\":\"{s}\"", .{d});

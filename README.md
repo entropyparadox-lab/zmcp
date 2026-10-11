@@ -1,11 +1,11 @@
 # zmcp ⚡
 
-[![Zig Version](https://img.shields.io/badge/Zig-0.16.0%2B-orange.svg)](https://ziglang.org)
+[![Zig Version](https://img.shields.io/badge/Zig-0.17.0%2B-orange.svg)](https://ziglang.org)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Zero-Allocation](https://img.shields.io/badge/Zero--Copy-Comptime%20Schema-brightgreen.svg)]()
 [![Model Context Protocol](https://img.shields.io/badge/MCP-2024--11--05-purple.svg)](https://modelcontextprotocol.io)
 
-**Pure Zig Zero-Allocation Model Context Protocol (MCP) SDK & Comptime Tool Generator (v0.16.0+)**
+**Pure Zig Zero-Allocation Model Context Protocol (MCP) SDK & Comptime Tool Generator (v0.17.0+)**
 
 `zmcp` provides native, ultra-lightweight, zero-C-dependency Model Context Protocol (MCP) server infrastructure for Zig developers. By leveraging Zig's compile-time reflection (`@typeInfo`), `zmcp` automatically converts plain Zig structs into **Draft-7 JSON Schema** definitions and dispatches **JSON-RPC 2.0 requests** at native speed with minimal memory footprint.
 
@@ -30,7 +30,7 @@
   - `tools/list`, `tools/call`
   - `resources/list`, `resources/read`
   - `prompts/list`
-- 🛡️ **Zero-C Dependencies & Pure Zig 0.16.0+**: Built natively with standard library and POSIX syscalls.
+- 🛡️ **Zero-C Dependencies & Pure Zig 0.17.0+**: Built natively with standard library and POSIX syscalls.
 - 🔌 **Transports**:
   - **Stdio (`zmcp.stdio.run`)**: Standard input/output transport for AI agents (Hermes, Claude Code, Cursor).
   - **Memory (`zmcp.MemoryTransport`)**: High-speed in-memory transport for deterministic testing and embedded runtimes.
