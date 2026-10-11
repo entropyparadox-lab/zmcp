@@ -55,7 +55,7 @@ const SystemStatusTool = struct {
 
     pub fn call(params: Params, alloc: std.mem.Allocator) !zmcp.CallToolResult {
         _ = params;
-        const status = try std.fmt.allocPrint(alloc, "zmcp Server v1.0.0 (Pure Zig 0.16.0+, Zero-Alloc Engine)", .{});
+        const status = try std.fmt.allocPrint(alloc, "zmcp Server v1.0.0 (Pure Zig 0.17.0-dev, Zero-Alloc Engine)", .{});
         return zmcp.CallToolResult.text(status);
     }
 };
@@ -66,7 +66,7 @@ pub fn main(init: std.process.Init) !void {
     var srv = zmcp.Server.init(allocator, .{
         .name = "zig-native-mcp",
         .version = "1.0.0",
-        .instructions = "Native Zig 0.16.0 Model Context Protocol Tool Server",
+        .instructions = "Native Zig 0.17.0-dev Model Context Protocol Tool Server",
     });
     defer srv.deinit();
 
