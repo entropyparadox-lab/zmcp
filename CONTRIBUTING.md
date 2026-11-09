@@ -6,7 +6,7 @@ Thank you for contributing to `zmcp`! To maintain the highest reliability, perfo
 
 ## 1. Compiler Versioning & Branch Strategy
 
-* **`main` (Protected)**: Targets the exact unreleased Zig development snapshot declared by `minimum_zig_version` in `build.zig.zon` and CI. All production releases (`vX.Y.Z`) are cut exclusively from `main`.
+* **`main` (Protected)**: Targets Zig **0.17.1**, matching `minimum_zig_version` in `build.zig.zon` and CI. All production releases (`vX.Y.Z`) are cut exclusively from `main`.
 * **`zig-master`**: Tracks upstream `ziglang/zig` nightly builds.
 * **`feat/<name>` / `fix/<name>`**: Branch off `main` for stable changes.
 
@@ -35,8 +35,8 @@ zig fmt src/ examples/ tests/ build.zig
 # 2. Run tests
 zig build test
 
-# 3. Run example server
-zig build run-example
+# 3. Run bounded stdio handshake, tool calls, and large-pipe regression
+python3 scripts/smoke_stdio.py --zig zig
 
 # 4. Verify benchmark
 zig build bench
